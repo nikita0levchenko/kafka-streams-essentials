@@ -1,0 +1,2 @@
+[debug] Created transactional ClassFileManager with tempDir = /Users/Nikita_Levchenko/IdeaProjects/Liberty Global/kafka-streams-essentials/project/target/scala-2.12/sbt-1.0/classes.bak
+[debug] Removing the temporary directory used for backing up class files: /Users/Nikita_Levchenko/IdeaProjects/Liberty Global/kafka-streams-essentials/project/target/scala-2.12/sbt-1.0/classes.bak

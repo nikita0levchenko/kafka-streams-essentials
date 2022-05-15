@@ -1,0 +1,122 @@
+[debug] > Exec(early(addDefaultCommands), None, None)
+[debug] > Exec(addDefaultCommands, None, None)
+[debug] > Exec(early(initialize), None, None)
+[debug] > Exec(initialize, None, None)
+[debug] > Exec(boot, None, None)
+[debug] > Exec(writeSbtVersion, None, None)
+[debug] > Exec(reload, None, None)
+[debug] > Exec(sbtStashOnFailure, None, None)
+[debug] > Exec(onFailure loadFailed, None, None)
+[debug] > Exec(loadp, None, None)
+[info] welcome to sbt 1.6.2 (Homebrew Java 1.8.0_322)
+[debug]       Load.loadUnit: plugins took 204.51239ms
+[debug]       Load.loadUnit: defsScala took 0.577114ms
+[debug] [Loading] Scanning directory /Users/Nikita_Levchenko/.sbt/1.0/plugins
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in /Users/Nikita_Levchenko/.sbt/1.0/plugins, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 27.241701 ms
+[debug]           Load.resolveProject(global-plugins) took 220.620777ms
+[debug]         Load.loadTransitive: finalizeProject(Project(id global-plugins, base: /Users/Nikita_Levchenko/.sbt/1.0/plugins, plugins: List(<none>))) took 280.639268ms
+[debug] [Loading] Done in /Users/Nikita_Levchenko/.sbt/1.0/plugins, returning: (global-plugins)
+[debug]       Load.loadUnit: loadedProjectsRaw took 313.64301ms
+[debug]       Load.loadUnit: cleanEvalClasses took 0.494392ms
+[debug]     Load.loadUnit(file:/Users/Nikita_Levchenko/.sbt/1.0/plugins/, ...) took 532.896717ms
+[debug]   Load.apply: load took 1002.40727ms
+[debug]   Load.apply: resolveProjects took 6.995456ms
+[debug]   Load.apply: finalTransforms took 72.107158ms
+[debug]   Load.apply: config.delegates took 9.833673ms
+[debug]   Load.apply: Def.make(settings)... took 472.381917ms
+[debug]   Load.apply: structureIndex took 129.25649ms
+[debug]   Load.apply: mkStreams took 3.008857ms
+[info] loading global plugins from /Users/Nikita_Levchenko/.sbt/1.0/plugins
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug] Load.defaultLoad until apply took 3554.4868ms
+[debug]           Load.loadUnit: plugins took 19.475982ms
+[debug]           Load.loadUnit: defsScala took 0.005121ms
+[debug] [Loading] Scanning directory /Users/Nikita_Levchenko/IdeaProjects/Liberty Global/kafka-streams-essentials/project
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in /Users/Nikita_Levchenko/IdeaProjects/Liberty Global/kafka-streams-essentials/project, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 3.723236 ms
+[debug]               Load.resolveProject(kafka-streams-essentials-build) took 1.52891ms
+[debug]             Load.loadTransitive: finalizeProject(Project(id kafka-streams-essentials-build, base: /Users/Nikita_Levchenko/IdeaProjects/Liberty Global/kafka-streams-essentials/project, plugins: List(<none>))) took 6.172961ms
+[debug] [Loading] Done in /Users/Nikita_Levchenko/IdeaProjects/Liberty Global/kafka-streams-essentials/project, returning: (kafka-streams-essentials-build)
+[debug]           Load.loadUnit: loadedProjectsRaw took 8.434125ms
+[debug]           Load.loadUnit: cleanEvalClasses took 0.01162ms
+[debug]         Load.loadUnit(file:/Users/Nikita_Levchenko/IdeaProjects/Liberty%20Global/kafka-streams-essentials/project/, ...) took 28.807664ms
+[debug]       Load.apply: load took 30.674387ms
+[debug]       Load.apply: resolveProjects took 0.213052ms
+[debug]       Load.apply: finalTransforms took 13.615015ms
+[debug]       Load.apply: config.delegates took 0.418026ms
+[debug]       Load.apply: Def.make(settings)... took 99.293149ms
+[debug]       Load.apply: structureIndex took 31.352038ms
+[debug]       Load.apply: mkStreams took 0.002877ms
+[info] loading project definition from /Users/Nikita_Levchenko/IdeaProjects/Liberty Global/kafka-streams-essentials/project
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[debug]     Load.loadUnit: plugins took 403.795921ms
+[debug]     Load.loadUnit: defsScala took 0.004681ms
+[debug] [Loading] Scanning directory /Users/Nikita_Levchenko/IdeaProjects/Liberty Global/kafka-streams-essentials
+[debug]       Load.loadUnit: mkEval took 12.137467ms
+[debug] [Loading] Found root project root w/ remaining 
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 2.363133 ms
+[info] loading settings for project root from build.sbt ...
+[debug]         Load.resolveProject(root) took 2.719135ms
+[debug]       Load.loadTransitive: finalizeProject(Project(id root, base: /Users/Nikita_Levchenko/IdeaProjects/Liberty Global/kafka-streams-essentials, plugins: List(<none>))) took 6.47655ms
+[debug] [Loading] Done in /Users/Nikita_Levchenko/IdeaProjects/Liberty Global/kafka-streams-essentials, returning: (root)
+[debug]     Load.loadUnit: loadedProjectsRaw took 2862.957512ms
+[debug]     Load.loadUnit: cleanEvalClasses took 5.406274ms
+[debug]   Load.loadUnit(file:/Users/Nikita_Levchenko/IdeaProjects/Liberty%20Global/kafka-streams-essentials/, ...) took 3273.081754ms
+[debug] Load.apply: load took 3274.570492ms
+[debug] Load.apply: resolveProjects took 0.185063ms
+[debug] Load.apply: finalTransforms took 7.765805ms
+[debug] Load.apply: config.delegates took 0.555143ms
+[debug] Load.apply: Def.make(settings)... took 67.762438ms
+[debug] Load.apply: structureIndex took 21.957528ms
+[debug] Load.apply: mkStreams took 0.002766ms
+[info] set current project to kafka-streams-essentials (in build file:/Users/Nikita_Levchenko/IdeaProjects/Liberty%20Global/kafka-streams-essentials/)
+[debug] > Exec(sbtPopOnFailure, None, None)
+[debug] > Exec(resumeFromFailure, None, None)
+[debug] > Exec(notifyUsersAboutShell, None, None)
+[debug] > Exec(iflast shell, None, None)
+[debug] > Exec(shell, None, None)
+[info] sbt server started at local:///Users/Nikita_Levchenko/.sbt/1.0/server/432c08dca8f82395619a/sock
+[debug] Writing bsp connection file
+[info] started sbt server
