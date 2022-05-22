@@ -3,10 +3,10 @@ import io.circe.parser._
 import io.circe.syntax._
 import io.circe.{Decoder, Encoder}
 import org.apache.kafka.common.serialization.Serde
-import org.apache.kafka.streams.kstream.{GlobalKTable, JoinWindows}
+import org.apache.kafka.streams.kstream.{GlobalKTable, JoinWindows, TimeWindows, Windowed}
 import org.apache.kafka.streams.scala.ImplicitConversions._
 import org.apache.kafka.streams.scala._
-import org.apache.kafka.streams.scala.kstream.{KStream, KTable}
+import org.apache.kafka.streams.scala.kstream.{KGroupedStream, KStream, KTable}
 import org.apache.kafka.streams.scala.serialization.Serdes
 import org.apache.kafka.streams.scala.serialization.Serdes._
 import org.apache.kafka.streams.{KafkaStreams, StreamsConfig}
@@ -16,10 +16,20 @@ import java.time.temporal.ChronoUnit
 import java.util.Properties
 
 object KafkaStream extends App {
+
   implicit def serde[A >: Null: Decoder: Encoder]: Serde[A] = {
     val serializer: A => Array[Byte] = (a: A) => a.asJson.noSpaces.getBytes()
-    val deserializer = (bytes: Array[Byte]) =>
-      decode[A](new String(bytes)).toOption
+    val deserializer = (bytes: Array[Byte]) => {
+      val valueOrError = decode[A](new String(bytes))
+      valueOrError match {
+        case Right(value) => Option(value)
+        case Left(error) =>
+          println(
+            s"There is a problem to convert the message $valueOrError $error"
+          )
+          Option.empty
+      }
+    }
 
     Serdes.fromFn[A](serializer, deserializer)
   }
@@ -27,72 +37,102 @@ object KafkaStream extends App {
   // topology
   val builder: StreamsBuilder = new StreamsBuilder()
 
-  import Domain._
-  import Topics._
+  def paidOrdersTopology(): Unit = {
+    import Domain._
+    import Topics._
 
-  //KStream
-  val usersWithOrders: KStream[UserId, Order] =
-    builder.stream[UserId, Order](OrdersByUserTopic)
+    //KStream
+    val usersWithOrders: KStream[UserId, Order] =
+      builder.stream[UserId, Order](OrdersByUserTopic)
 
-  //KTable
-  val userProfilesTable: KTable[UserId, Profile] =
-    builder.table[UserId, Profile](DiscountProfilesByUserTopic)
+    //KTable
+    val userProfilesTable: KTable[UserId, Profile] =
+      builder.table[UserId, Profile](DiscountProfilesByUserTopic)
 
-  //GlobalKTable
-  val discountProfilesGTable: GlobalKTable[Profile, Discount] =
-    builder.globalTable[Profile, Discount](DiscountsTopic)
+    //GlobalKTable
+    val discountProfilesGTable: GlobalKTable[Profile, Discount] =
+      builder.globalTable[Profile, Discount](DiscountsTopic)
 
-  // KStream/KTable transformations: filter, map, flatMap, mapWithValue, flatMapWithValue
+    // KStream/KTable transformations: filter, map, flatMap, mapWithValue, flatMapWithValue
 
-  //filtering
-  val expensiveOrders: KStream[UserId, Order] =
-    usersWithOrders.filter((userId, order) => order.amount > 1000.00)
+    //filtering
+    val expensiveOrders: KStream[UserId, Order] =
+      usersWithOrders.filter((userId, order) => order.amount > 1000.00)
 
-  // simple maping
-  val listOfProducts: KStream[UserId, List[Product]] =
-    usersWithOrders.mapValues(_.products)
+    // simple maping only values
+    val listOfProducts: KStream[UserId, List[Product]] =
+      usersWithOrders.mapValues(_.products)
 
-  // flatMapping
-  val flatListOfProducts: KStream[UserId, Product] =
-    usersWithOrders.flatMapValues(_.products)
+    // flatMapping only values
+    val flatListOfProducts: KStream[UserId, Product] =
+      usersWithOrders.flatMapValues(_.products)
 
-  // joins
-  val ordersWithUsersProfiles: KStream[UserId, (Order, Profile)] =
-    usersWithOrders.join(userProfilesTable) { (userId, order) =>
-      (userId, order)
-    }
+    // grouping messages by key for next aggregating operations
+    val productsPurchasedByUsers: KGroupedStream[UserId, Product] =
+      flatListOfProducts.groupByKey
 
-  val ordersWithDiscount: KStream[UserId, Order] =
-    ordersWithUsersProfiles.join(discountProfilesGTable)(
-      { case (userId, (order, profile)) =>
-        profile
-      }, // key of the join - picked from the left stream
-      { case ((order, profile), discount) =>
-        order.copy(amount = order.amount * (1.0 - discount.amount))
-      } // values of the matched records
+    // grouping messages by your own condition
+    val purchasedVyFirstLatter = flatListOfProducts.groupBy((userId, product) =>
+      userId.charAt(0).toLower.toString
     )
 
-  // pick another identifiers
-  val ordersStream: KStream[OrderId, Order] =
-    ordersWithDiscount.selectKey((userId, order) => order.orderId)
+    // aggregations using windowed
+    // we want to know how much purchased products every ten seconds
+    val everyTenSeconds: TimeWindows = TimeWindows.of(Duration.ofSeconds(10))
 
-  val paymentStream: KStream[OrderId, Payment] =
-    builder.stream[OrderId, Payment](PaymentsTopic)
+    val numberOfProductsByUserEveryTenSeconds: KTable[Windowed[UserId], Long] =
+      productsPurchasedByUsers.windowedBy(everyTenSeconds)
+        .aggregate[Long](0L) { (userId, product, counter) =>
+          counter + 1
+        }
+    // joins
+    val ordersWithUsersProfiles: KStream[UserId, (Order, Profile)] =
+      usersWithOrders.join(userProfilesTable) { (userId, order) =>
+        (userId, order)
+      }
 
-  // find orders with payments
-  val joinWindow = JoinWindows.of(Duration.of(5, ChronoUnit.MINUTES))
+    val ordersWithDiscount: KStream[UserId, Order] =
+      ordersWithUsersProfiles.join(discountProfilesGTable)(
+        { case (userId, (order, profile)) =>
+          profile
+        }, // key of the join - picked from the left stream
+        { case ((order, profile), discount) =>
+          order.copy(amount = order.amount * (1.0 - discount.amount))
+        } // values of the matched records
+      )
 
-  val joinOrdersPayment = (order: Order, payment: Payment) =>
-    if (payment.status == "PAID") Option(order) else Option.empty[Order]
+    // pick another identifiers
+    val ordersStream: KStream[OrderId, Order] =
+      ordersWithDiscount.selectKey((userId, order) => order.orderId)
 
-  val ordersWithPayments = ordersStream
-    .join(paymentStream)(joinOrdersPayment, joinWindow)
-    .flatMapValues(mayBeOrders => mayBeOrders.toIterable)
+    val paymentStream: KStream[OrderId, Payment] =
+      builder.stream[OrderId, Payment](PaymentsTopic)
 
-  // sink / sink processor / output
-  ordersWithPayments.to(PaidOrdersTopic)
+    // find orders with payments
+    val joinWindow = JoinWindows.of(Duration.of(5, ChronoUnit.MINUTES))
 
-  val topology = builder.build()
+    val joinOrdersPayment = (order: Order, payment: Payment) =>
+      if (payment.status == "PAID") Option(order) else Option.empty[Order]
+
+    val ordersWithPayments = ordersStream
+      .join(paymentStream)(joinOrdersPayment, joinWindow)
+      .flatMapValues(mayBeOrders => mayBeOrders.toIterable)
+
+    // sink / sink processor / output
+    ordersWithPayments.to(PaidOrdersTopic)
+
+    // print purchased products by users
+    flatListOfProducts.foreach((userId, product) =>
+      println(s"User[$userId] purchased the product [$product]")
+    )
+
+    // print count of products grouped purchased products by user
+    val numberOfProductsByUser: KStream[UserId, Long] =
+      productsPurchasedByUsers.count().toStream
+    numberOfProductsByUser.foreach((userId, number) =>
+      println(s"User[$userId] purchased the count of products [$number]")
+    )
+  }
 
   // setup the application properties
   val props = new Properties()
@@ -102,6 +142,10 @@ object KafkaStream extends App {
     StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG,
     Serdes.stringSerde.getClass
   )
+
+  paidOrdersTopology()
+
+  val topology = builder.build()
 
   val application = new KafkaStreams(topology, props)
   application.start()
