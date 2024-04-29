@@ -1,2 +1,5 @@
 .bsp/*
 .idea/*
+.gitignore
+project
+target
